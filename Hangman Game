@@ -1,0 +1,75 @@
+import random
+
+
+def indices(lst, item):
+    return [i for i, x in enumerate(lst) if x == item]
+
+
+win_record = 0
+lose_record = 0
+
+while True:
+    print("H A N G M A N")
+    command = input('Type "play" to play the game, "results" to show the scoreboard, and "exit" to quit: ')
+    if command == "play":
+        answer = ['python', 'java', 'swift', 'javascript']
+        random_answer = random.choice(answer)
+        attempted_answers = []
+        attempts = 8
+        print()
+        output = ("-" * len(random_answer))
+        print(output)
+        displace = list(output)
+
+        for i in range(8):
+            while True:
+                if set(displace) == set(random_answer) or attempts == 0:
+                    break
+                print()
+                attempt = input("Input a letter: ")
+                if len(attempt) != 1:
+                    print("Please, input a single letter.")
+                    output = "".join(displace)
+                    print(output)
+                    continue
+                else:
+                    if attempt.isupper() or attempt.isalpha() is False:
+                        print("Please, enter a lowercase letter from the English alphabet.")
+                        output = "".join(displace)
+                        print(output)
+                        continue
+                    if attempt.isalpha():
+                        if attempt in attempted_answers:
+                            print("You've already guessed this letter.")
+                            output = "".join(displace)
+                            print(output)
+                            continue
+                        else:
+                            if attempt in random_answer and attempt not in attempted_answers:
+                                for j in indices(random_answer, attempt):
+                                    displace[j] = attempt
+                                output = "".join(displace)
+                                print(output)
+                                attempted_answers.append(attempt)
+                                continue
+                            if attempt not in random_answer:
+                                print("That letter doesn't appear in the word.")
+                                attempts -= 1
+                                output = "".join(displace)
+                                print(output)
+                                attempted_answers.append(attempt)
+                                break
+
+        if set(displace) == set(random_answer):
+            print(f"You guessed the word {random_answer}!")
+            print("You survived!")
+            win_record += 1
+        else:
+            print("You lost!")
+            lose_record += 1
+
+    if command == "results":
+        print(f"You won: {win_record} times.")
+        print(f"You lost: {lose_record} times.")
+    if command == "exit":
+        break
