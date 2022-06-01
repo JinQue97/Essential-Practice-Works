@@ -1,0 +1,92 @@
+def contains(text, pattern):
+    for i in range(len(text) - len(pattern) + 1):
+        found = True
+
+        for j in range(len(pattern)):
+            if text[i + j] != pattern[j]:
+                found = False
+                break
+
+        if found:
+            return True
+
+    return False
+
+
+def win(line, attempt):
+    for i in range(3):
+            if line[i] == attempt and line[i+3] == attempt and line[i+6] == attempt:
+                return True               
+    if contains(line[0:3], attempt * 3) or contains(line[4:6], attempt * 3) or contains(line[7:9], attempt * 3):
+        return True
+    if line[2] == attempt and line[4] == attempt and line[6] == attempt:
+        return True
+    if line[0] == attempt and line[4] == attempt and line[8] == attempt:
+        return True
+    else:
+        return False
+
+
+
+moves = " " * 9
+listed_moves = list(moves)
+attempt = 0
+
+print('---------')
+print("| " + listed_moves[0] + " " + listed_moves[1] + " " + listed_moves[2] + " |")
+print("| " + listed_moves[3] + " " + listed_moves[4] + " " + listed_moves[5] + " |")
+print("| " + listed_moves[6] + " " + listed_moves[7] + " " + listed_moves[8] + " |")
+print('---------')
+
+while True:
+    where_to = input()
+    i = int(where_to[2])
+    j = int(where_to[0])
+    
+    if where_to.isdigit == False:
+        print("You should enter numbers!")
+        continue
+    if i < 1 or i > 3 or j < 1 or j > 3:
+        print("Coordinates should be from 1 to 3!")
+        continue
+    else:
+        i += 2
+        j -= 1
+        index = (j * 3 + i) - 3
+        if listed_moves[index] == 'X' or listed_moves[index] == 'O':
+            print("This cell is occupied! Choose another one!")
+            continue
+        else:
+            if attempt % 2 == 1:
+                attempt += 1
+                listed_moves[index] = "X" 
+                move_memory = "".join(listed_moves)
+                print(move_memory)
+            elif attempt % 2 == 0:
+                attempt += 1
+                listed_moves[index] = "O"
+                move_memory = "".join(listed_moves)
+                print(move_memory)
+
+            print('---------')
+            print("| " + listed_moves[0] + " " + listed_moves[1] + " " + listed_moves[2] + " |")
+            print("| " + listed_moves[3] + " " + listed_moves[4] + " " + listed_moves[5] + " |")
+            print("| " + listed_moves[6] + " " + listed_moves[7] + " " + listed_moves[8] + " |")
+            print('---------')
+            
+            if win(move_memory, 'O') == True or win(move_memory, 'X') == True:
+                while True:
+                    if win(move_memory, 'O') == True and win(move_memory, 'X') == True:
+                        print("Impossible")
+                        break
+                    if win(move_memory, 'O'):
+                        print('O wins')
+                        break
+                    if win(move_memory, 'X'):
+                        print('X wins')
+                        break
+                    break
+                break
+            if attempt == 9 and not win(move_memory, 'O') and not win(move_memory, 'X'):
+                print("Draw")
+                break
